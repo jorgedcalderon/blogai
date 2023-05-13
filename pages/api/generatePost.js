@@ -1,11 +1,10 @@
-import {getSession, withPageAuthRequired} from "@auth0/nextjs-auth0";
+import {getSession, withApiAuthRequired} from "@auth0/nextjs-auth0";
 import { Configuration, OpenAIApi } from "openai";
 import clientPromise from '../../lib/mongodb';
 
-export default withPageAuthRequired( async function handler(req, res) {
-  try{
-    // all code in here
-    const {user} = await getSession(req, res);
+export default withApiAuthRequired( async function handler(req, res) {
+
+  const {user} = await getSession(req, res);
   const client = await clientPromise;
   const db = client.db("LaBloguera");
   const userProfile = await db.collection("users").findOne({
@@ -125,9 +124,6 @@ export default withPageAuthRequired( async function handler(req, res) {
   res.status(200).json({
     postId: post.insertedId,
   });
-  }catch(e){
-    console.log("ERROR: ", e);  
-  }
 
 });
   
